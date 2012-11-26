@@ -1,1 +1,0 @@
-# Sample Scala+Play Web Application to test Mechanize framework
