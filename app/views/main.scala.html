@@ -1,0 +1,31 @@
+@(subtitle:String)(content: Html)
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>@subtitle - Sample Scala+Play Web Application to Test Mechanize</title>
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+<script src="@routes.Assets.at(" javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+</head>
+<body>
+	<section id="top">
+		<div class="wrapper">
+			<h1>
+				<a href="@routes.Application.index">Home</a>
+			</h1>
+		</div>
+	</section>
+	
+	@content
+</body>
+</html>

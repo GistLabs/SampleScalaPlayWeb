@@ -1,0 +1,39 @@
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@main("Index Page") {
+
+<div id="content" class="wrapper doc">
+<h2>Example pages list: </h2>
+ <ul>    
+ 			<h3>Different response codes:</h3>
+                <li><a href="@routes.Application.redir">302 Redirect Example</a></li>
+                <li><a href="@routes.Application.infiniteRedir">302 Infinite Redirect Example</a></li>
+                <li><a href="@routes.Application.strangeResponseCode">Strange Response Code(466) Example</a></li> 
+                <li><a href="@routes.Application.internalServerError">Internal Server Error Example</a></li>
+             <br/><br/>   
+             
+             <h3>Different resulting data:</h3>    
+                <li><a href="@routes.Application.xmlResult">Simple XML Example</a></li>
+                <li><a href="@routes.Application.imgResult">Image Example</a></li>
+                <li><a href="@routes.Application.echoCookies">Echo Cookies Example</a></li>
+                <li><a href="@routes.Application.customCookie">Custom cookie Example</a></li>
+                
+             <h3>Forms:</h3> 
+             	<li><a href="@routes.Application.simpleForms">Simple Forms(GET&POST) Example</a></li>
+             	<li><a href="@routes.Application.simpleForms">Advanced Form Example</a></li>
+             	<li><a href="@routes.Application.showUpload">File Upload Example</a></li>
+             <br/><br/>
+                
+            </ul>
+            
+	
+</div>
+
+}

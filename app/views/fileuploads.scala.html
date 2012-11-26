@@ -1,0 +1,27 @@
+@(clientForm: Form[Client])
+
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@import helper._
+@main("File Upload Example") {
+
+<div id="content" class="wrapper doc">
+
+<h2>File upload: </h2>	
+	@form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {   
+    	<input type="file" name="file">    
+    	<p>
+        	<input type="submit">
+    	</p>    
+	}
+	
+	<a href="@routes.Application.index">Back</a>
+</div>
+}

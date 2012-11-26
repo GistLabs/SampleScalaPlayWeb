@@ -1,0 +1,17 @@
+logs/
+dist/
+*.lock
+*.komodoproject
+.DS_Store
+.history
+.idea
+RUNNING_PID
+.classpath
+.project
+.settings/
+.target/
+.cache
+*.iml
+tmp
+project/project
+project/target

@@ -1,0 +1,27 @@
+@(data:Map[String,String])
+
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@import helper._
+@main("Form result") {
+
+<div id="content" class="wrapper doc">
+<h3>Form Data Application Got: </h3>
+<table width="50%">
+    @for((k,v)<-data){
+	<tr>
+	    <td width="1px" align="left">@k</td><td width="1px" align="left">@v</td>
+	<tr>
+    }
+</table>
+
+<a href="@routes.Application.index">Back</a>
+</div>
+}
