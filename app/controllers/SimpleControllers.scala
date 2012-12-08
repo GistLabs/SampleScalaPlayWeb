@@ -17,30 +17,37 @@ import play.api.data.validation.Constraints._
 import play.api.Play
 import java.io.File
 
-object Application extends Controller {
 
+object Application extends Controller {
   def index = Action {
     Ok(views.html.index())
   }
+}
 
+
+object ResponseCodesController extends Controller {
   def redir = Action {
     Redirect(routes.Application.index)
   }
 
   def infiniteRedir = Action {
-    Redirect(routes.Application.infiniteRedir)
+    Redirect(routes.ResponseCodesController.infiniteRedir)
   }
 
-  def xmlResult = Action {
-    Ok(<message>Hello form GistLabs!</message>)
-  }
-
-  def imgResult = Action {
-    Ok(views.html.imgexample())
-  }
 
   def strangeResponseCode = Action {
     Status(466)("466 Response code")
+  }
+
+  def internalServerError = Action {
+    InternalServerError("Oops")
+  }
+}
+
+
+object SimpleResultsController extends Controller {
+  def xmlResult = Action {
+    Ok(<message>Hello form GistLabs!</message>)
   }
 
   def echoCookies = Action { request =>
@@ -48,18 +55,18 @@ object Application extends Controller {
     Ok(views.html.echocookies(cookies)).withHeaders(SET_COOKIE -> cookies)
   }
 
-  def internalServerError = Action {
-    InternalServerError("Oops")
-  }
-
   def customCookie = Action {
     Ok(views.html.index()).withCookies(Cookie("sender", "gistlabs"))
   }
 
-  /**
-   * Client Form definition.
-   */
-  val clientForm: Form[Client] = Form(
+  def imgResult = Action {
+    Ok(views.html.imgexample())
+  }
+}
+
+
+ object FormsController extends Controller {
+  val simpleForm: Form[Client] = Form(
 
     // Defines a mapping that will handle Contact values
     mapping(
@@ -68,7 +75,7 @@ object Application extends Controller {
       "lastname" -> nonEmptyText)(Client.apply)(Client.unapply))
 
   def simpleForms = Action {
-    Ok(views.html.simpleforms(clientForm))
+    Ok(views.html.simpleforms(simpleForm))
   }
 
   def simpleFormsGetSubmit = Action { implicit request =>
@@ -77,12 +84,15 @@ object Application extends Controller {
   }
 
   def simpleFormsPostSubmit = Action { implicit request =>
-    val form = clientForm.bindFromRequest()
+    val form = simpleForm.bindFromRequest()
     form.fold(
       errors => BadRequest(views.html.simpleforms(form.copy(errors = form.errors))),
       client => Ok(views.html.showSimpleFormsResult(form.data)))
   }
+}
 
+
+object FilesController extends Controller{
   def showUpload = Action {
     Ok(views.html.showUpload())
   }
