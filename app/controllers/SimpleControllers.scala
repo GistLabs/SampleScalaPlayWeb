@@ -8,14 +8,9 @@
 
 package controllers
 
-import models._
-import play.api._
 import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.validation.Constraints._
-import play.api.Play
-import java.io.File
+import java.lang.RuntimeException
+import play.api.mvc.Cookie
 
 
 object Application extends Controller {
@@ -50,8 +45,20 @@ object SimpleResultsController extends Controller {
     Ok(<message>Hello form GistLabs!</message>)
   }
 
-  def echoCookies = Action { request =>
-    val cookies = request.headers(COOKIE)
+  def echoTestTagFromXml = Action { request =>
+      request.body.asXml.map { xml =>
+        (xml \\ "test" headOption).map(_.text).map { test =>
+          Ok(views.xml.testTag(test))
+        }.getOrElse {
+          BadRequest("Missing parameter [test]")
+        }
+      }.getOrElse {
+        BadRequest("Expecting Xml data")
+      }
+  }
+
+  def echoCookies = Action {implicit request =>
+    val cookies = request.headers.get(COOKIE).getOrElse("")
     Ok(views.html.echocookies(cookies)).withHeaders(SET_COOKIE -> cookies)
   }
 
@@ -61,56 +68,5 @@ object SimpleResultsController extends Controller {
 
   def imgResult = Action {
     Ok(views.html.imgexample())
-  }
-}
-
-
- object FormsController extends Controller {
-  val simpleForm: Form[Client] = Form(
-
-    // Defines a mapping that will handle Contact values
-    mapping(
-      "username" -> nonEmptyText,
-      "firstname" -> nonEmptyText,
-      "lastname" -> nonEmptyText)(Client.apply)(Client.unapply))
-
-  def simpleForms = Action {
-    Ok(views.html.simpleforms(simpleForm))
-  }
-
-  def simpleFormsGetSubmit = Action { implicit request =>
-    def param(field: String): Option[String] = request.queryString.get(field).flatMap(_.headOption)
-    Ok(views.html.showSimpleFormsResult(Map("name" -> param("name").getOrElse(""))))
-  }
-
-  def simpleFormsPostSubmit = Action { implicit request =>
-    val form = simpleForm.bindFromRequest()
-    form.fold(
-      errors => BadRequest(views.html.simpleforms(form.copy(errors = form.errors))),
-      client => Ok(views.html.showSimpleFormsResult(form.data)))
-  }
-}
-
-
-object FilesController extends Controller{
-  def showUpload = Action {
-    Ok(views.html.showUpload())
-  }
-
-  def upload = Action(parse.multipartFormData) { request =>
-    request.body.file("file").map { file =>
-      val filename = file.filename
-      val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
-      file.ref.moveTo(new File(fullFilename))
-      Ok(views.html.showUploadedDownload(filename))
-    }.getOrElse {
-      Redirect(routes.Application.index).flashing(
-        "error" -> "Missing file")
-    }
-  }
-
-  def download(filename: String) = Action {
-    val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
-    Ok.sendFile(new java.io.File(fullFilename))
   }
 }

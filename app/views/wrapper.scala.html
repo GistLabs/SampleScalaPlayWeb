@@ -1,4 +1,4 @@
-@(subtitle:String)(content: Html)
+@(subtitle:String, back:Boolean)(content: Html)
 @{/**
 * Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
 *
@@ -29,7 +29,9 @@
     <div id="content" class="wrapper doc">
 	@content
 
-    <p><a href="@routes.MainController.index">Back</a></p>
+    @if(back){
+        <p><a href="@routes.Application.index">Back to Homepage</a></p>
+    }
     </div>
 </body>
 </html>

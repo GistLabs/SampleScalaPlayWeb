@@ -8,16 +8,11 @@
 }
 
 @import helper._
-@main("Simple Forms Example") {
-
-<div id="content" class="wrapper doc">
-
-	@form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {    
+@wrapper("Simple Forms Example",true) {
+	@form(action = routes.FilesController.upload, 'enctype -> "multipart/form-data") {
     	<input type="file" name="file">    
     	<p>
         	<input type="submit" value ="Send">
     	</p>
     }
-
-</div>
 }

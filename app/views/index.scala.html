@@ -7,33 +7,27 @@
 */
 }
 
-@main("Index Page") {
-
-<div id="content" class="wrapper doc">
+@wrapper("Index Page",false) {
 <h2>Example pages list: </h2>
  <ul>    
- 			<h3>Different response codes:</h3>
-                <li><a href="@routes.Application.redir">302 Redirect Example</a></li>
-                <li><a href="@routes.Application.infiniteRedir">302 Infinite Redirect Example</a></li>
-                <li><a href="@routes.Application.strangeResponseCode">Strange Response Code(466) Example</a></li> 
-                <li><a href="@routes.Application.internalServerError">Internal Server Error Example</a></li>
-             <br/><br/>   
-             
-             <h3>Different resulting data:</h3>    
-                <li><a href="@routes.Application.xmlResult">Simple XML Example</a></li>
-                <li><a href="@routes.Application.imgResult">Image Example</a></li>
-                <li><a href="@routes.Application.echoCookies">Echo Cookies Example</a></li>
-                <li><a href="@routes.Application.customCookie">Custom cookie Example</a></li>
-                
-             <h3>Forms:</h3> 
-             	<li><a href="@routes.Application.simpleForms">Simple Forms(GET&POST) Example</a></li>
-             	<li><a href="@routes.Application.simpleForms">Advanced Form Example</a></li>
-             	<li><a href="@routes.Application.showUpload">File Upload Example</a></li>
-             <br/><br/>
-                
-            </ul>
-            
-	
-</div>
+ 			<p><h3>Different response codes:</h3></p>
+                <li><a href="@routes.ResponseCodesController.redir">302 Redirect Example</a></li>
+                <li><a href="@routes.ResponseCodesController.infiniteRedir">302 Infinite Redirect Example</a></li>
+                <li><a href="@routes.ResponseCodesController.strangeResponseCode">Strange Response Code(466) Example</a></li>
+                <li><a href="@routes.ResponseCodesController.internalServerError">Internal Server Error Example</a></li>
 
+     <p><h3>Different resulting data:</h3></p>
+                <li><a href="@routes.SimpleResultsController.xmlResult">Simple XML Example</a></li>
+                <li><a href="@routes.SimpleResultsController.echoTestTagFromXml">Echo <test/> Tag XML Example</a></li>
+
+                <li><a href="@routes.SimpleResultsController.imgResult">Image Example</a></li>
+                <li><a href="@routes.SimpleResultsController.echoCookies">Echo Cookies Example</a></li>
+                <li><a href="@routes.SimpleResultsController.customCookie">Custom cookie Example</a></li>
+
+     <p><h3>Forms:</h3></p>
+             	<li><a href="@routes.FormsController.simpleForms">Simple Forms(GET&POST) Example</a></li>
+             	<li><a href="@routes.FormsController.simpleForms">Advanced Form Example</a></li>
+             	<li><a href="@routes.FilesController.showUpload">File Upload Example</a></li>
+
+            </ul>
 }

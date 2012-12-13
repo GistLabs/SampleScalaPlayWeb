@@ -7,13 +7,7 @@
 */
 }
 
-@main("Image Example") {
-
-<div id="content" class="wrapper doc">
+@wrapper("Image Example",true) {
 <h2>Example image: </h2>
-	<a href="@routes.Application.index">Back</a>
 	<img src="@routes.Assets.at("images/hole.jpg")">
-	<a href="@routes.Application.index">Back</a>
-</div>
-
 }

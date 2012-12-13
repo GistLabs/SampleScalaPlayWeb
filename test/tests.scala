@@ -7,9 +7,10 @@
  */
 
 import org.specs2.mutable._
-
 import play.api.test._
 import play.api.test.Helpers._
+import xml.XML
+
 
 class ControllersSpec extends Specification {
 	"index action" in {
@@ -20,14 +21,29 @@ class ControllersSpec extends Specification {
 	}
 
   "infinite redirect action" in {
-    val result = controllers.Application.infiniteRedir()(FakeRequest())
+    val result = controllers.ResponseCodesController.infiniteRedir()(FakeRequest())
     status(result) must  beBetween(300, 399)
   }
 
   "Internal Server Error" in {
-    val result = controllers.Application.internalServerError()(FakeRequest())
+    val result = controllers.ResponseCodesController.internalServerError()(FakeRequest())
     status(result) must  beBetween(500, 599)
   }
 
+  "Test Tag Xml Echo" in {
+    running(FakeApplication()) {
+      val result = route(FakeRequest(POST, controllers.routes.SimpleResultsController.echoTestTagFromXml().url).
+                            withHeaders(CONTENT_TYPE -> "text/xml"), "<test>test</test>").get
 
+      val data = XML.loadString(contentAsString(result))
+      (data \\ "echo").text must equalTo("test")
+      status(result) must equalTo(OK)
+    }
+  }
+
+  "Hello form GistLabs!" in {
+    val result = controllers.SimpleResultsController.xmlResult()(FakeRequest())
+    val data = XML.loadString(contentAsString(result))
+    (data \\ "message").text must contain("GistLabs")
+  }
 }

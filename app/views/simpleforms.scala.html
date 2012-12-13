@@ -10,28 +10,22 @@
 }
 
 @import helper._
-@main("Simple Forms Example") {
-
-<div id="content" class="wrapper doc">
-
-<h2>Get Form Example: </h2>	
-	@helper.form(action = routes.Application.simpleFormsGetSubmit) {
-    	<input type="text" name="name"/>
-    	<input type="submit" value="Send Data"/>
-	}
-<br/><br/>	
-	
-<h2>Post Form Example: </h2>
-	@helper.form(action = routes.Application.simpleFormsPostSubmit) {
-    	@helper.inputText(clientForm("username"))    
-    	@helper.inputText(clientForm("firstname"))
-    	@helper.inputText(clientForm("lastname"))
-    	
-	
-	<div class="actions">
-    	<input type="submit" class="btn primary" value="Send Data">
-    </div>	
+@wrapper("Simple Forms Example",true) {
+    <h2>Get Form Example: </h2>
+    @helper.form(action = routes.FormsController.simpleFormsGetSubmit) {
+        <input type="text" name="name"/>
+        <input type="submit" value="Send Data"/>
     }
-	<a href="@routes.Application.index">Back</a>
-</div>
+    <br/><br/>
+
+    <h2>Post Form Example: </h2>
+    @helper.form(action = routes.FormsController.simpleFormsPostSubmit) {
+        @helper.inputText(clientForm("username"))
+        @helper.inputText(clientForm("firstname"))
+        @helper.inputText(clientForm("lastname"))
+
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Send Data">
+        </div>
+    }
 }
