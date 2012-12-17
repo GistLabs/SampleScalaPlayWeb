@@ -3,26 +3,28 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                               controllers.Application.index
 
-GET     /302.example                controllers.ResponseCodesController.redir
-GET     /466.example        		controllers.ResponseCodesController.strangeResponseCode
-GET     /302infinite.example        controllers.ResponseCodesController.infiniteRedir
-GET     /ise.example        		controllers.ResponseCodesController.internalServerError
+GET     /302.example                    controllers.ResponseCodesController.redir
+GET     /466.example        		    controllers.ResponseCodesController.strangeResponseCode
+GET     /302infinite.example            controllers.ResponseCodesController.infiniteRedir
+GET     /ise.example        		    controllers.ResponseCodesController.internalServerError
 
-GET     /xml.example                controllers.SimpleResultsController.xmlResult
-POST     /testechotag.example        controllers.SimpleResultsController.echoTestTagFromXml
-GET     /img.example                controllers.SimpleResultsController.imgResult
-GET     /echocookies.example        controllers.SimpleResultsController.echoCookies
-GET     /customcookie.example       controllers.SimpleResultsController.customCookie
+GET     /xml.example                    controllers.SimpleResultsController.xmlResult
+POST    /testechotag.example            controllers.SimpleResultsController.echoTestTagFromXml
+GET     /img.example                    controllers.SimpleResultsController.imgResult
+GET     /echocookies.example            controllers.SimpleResultsController.echoCookies
+GET     /customcookie.example           controllers.SimpleResultsController.customCookie
 
-GET     /simpleforms.example       	controllers.FormsController.simpleForms
-GET     /getsubmit.example       	controllers.FormsController.simpleFormsGetSubmit
-POST    /postsubmit.example       	controllers.FormsController.simpleFormsPostSubmit
+GET     /simpleforms.example       	    controllers.FormsController.simpleForms
+GET     /getsubmit.example       	    controllers.FormsController.simpleFormsGetSubmit
+POST    /postsubmit.example       	    controllers.FormsController.simpleFormsPostSubmit
 
-GET     /upload.example		      	controllers.FilesController.showUpload
-POST    /upload				      	controllers.FilesController.upload
-GET     /hello/:filename 		    controllers.FilesController.download(filename)
+
+GET     /multiupload.example            controllers.FilesController.showSingleUpload
+GET     /singleupload.example           controllers.FilesController.showMultiUpload
+POST    /upload				      	    controllers.FilesController.upload
+GET     /download/:filename 		    controllers.FilesController.download(filename)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file                   controllers.Assets.at(path="/public", file)

@@ -8,12 +8,14 @@
 
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{MultipartFormData, Action, Controller}
 import play.api.data.Form
 import play.api.data.Forms._
 import models.Client
 import play.api.Play
 import java.io.File
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.Files
 
 
 object FormsController extends Controller {
@@ -44,19 +46,28 @@ object FormsController extends Controller {
 
 
 object FilesController extends Controller{
-  def showUpload = Action {
-    Ok(views.html.showUpload())
+  def showSingleUpload = showUpload(false)
+  def showMultiUpload  = showUpload(true)
+
+  def showUpload(multi: Boolean) = Action {
+    Ok(views.html.showUpload(multi))
   }
 
-  def upload = Action(parse.multipartFormData) { request =>
-    request.body.file("file").map { file =>
+  def upload = Action { request =>
+    def writeFile(file:MultipartFormData.FilePart[Files.TemporaryFile]):String = {
       val filename = file.filename
       val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
-      file.ref.moveTo(new File(fullFilename))
-      Ok(views.html.showUploadedDownload(filename))
-    }.getOrElse {
-      Redirect(routes.Application.index).flashing(
-        "error" -> "Missing file")
+      file.ref.moveTo(new File(fullFilename), true)
+      filename
+    }
+
+    val filenames = request.body.asMultipartFormData.headOption.map {multi =>
+      for (file <- multi.files) yield writeFile(file)
+    }
+
+    filenames match {
+        case Some(names) => Ok(views.html.showUploadedDownload(names))
+        case None => BadRequest("Missing file")
     }
   }
 

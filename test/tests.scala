@@ -7,6 +7,10 @@
  */
 
 import org.specs2.mutable._
+import play.api.libs.Files.TemporaryFile
+import play.api.mvc.{MultipartFormData, Cookie}
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.Play
 import play.api.test._
 import play.api.test.Helpers._
 import xml.XML
@@ -45,5 +49,18 @@ class ControllersSpec extends Specification {
     val result = controllers.SimpleResultsController.xmlResult()(FakeRequest())
     val data = XML.loadString(contentAsString(result))
     (data \\ "message").text must contain("GistLabs")
+  }
+
+
+  "Echo Cookies" in {
+    running(FakeApplication()) {
+      val result = route(FakeRequest(GET, controllers.routes.SimpleResultsController.echoCookies().url).
+        withCookies(new Cookie("test","test")), "").get
+
+      val cookies = header(SET_COOKIE,result).getOrElse("")
+
+      status(result) must equalTo(OK)
+      cookies must contain("test")
+    }
   }
 }

@@ -1,4 +1,4 @@
-@(filename:String)
+@(filenames:Seq[String])
 
 @{/**
 * Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
@@ -11,5 +11,7 @@
 
 @import helper._
 @wrapper("Download Uploaded File",true) {
-	<a href="@routes.FilesController.download(filename)">Download @filename</a>
+    @filenames.map{filename =>
+	    <p><a href="@routes.FilesController.download(filename)">Download @filename</a></p>
+    }
 }

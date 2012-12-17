@@ -1,3 +1,5 @@
+@(multi:Boolean)
+
 @{/**
 * Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
 *
@@ -10,9 +12,13 @@
 @import helper._
 @wrapper("Simple Forms Example",true) {
 	@form(action = routes.FilesController.upload, 'enctype -> "multipart/form-data") {
-    	<input type="file" name="file">    
+            <input type="file" name="files"
+                @if(multi){
+                    multiple id="files" size="30"
+                }
+            />
     	<p>
-        	<input type="submit" value ="Send">
+        	<input type="submit" value ="Send" />
     	</p>
     }
 }
