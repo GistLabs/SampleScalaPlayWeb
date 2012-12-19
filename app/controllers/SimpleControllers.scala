@@ -22,13 +22,16 @@ object Application extends Controller {
 
 object ResponseCodesController extends Controller {
   def redir = Action {
-    Redirect(routes.Application.index)
+    Redirect(routes.ResponseCodesController.redirTarget())
+  }
+
+  def redirTarget = Action{
+    Ok(views.html.redirectTarget())
   }
 
   def infiniteRedir = Action {
     Redirect(routes.ResponseCodesController.infiniteRedir)
   }
-
 
   def strangeResponseCode = Action {
     Status(466)("466 Response code")
@@ -43,6 +46,10 @@ object ResponseCodesController extends Controller {
 object SimpleResultsController extends Controller {
   def xmlResult = Action {
     Ok(<message>Hello form GistLabs!</message>)
+  }
+
+  def echoTestTagHelp = Action {
+    Ok(views.html.echoTestTagHelp())
   }
 
   def echoTestTagFromXml = Action { request =>
@@ -63,7 +70,7 @@ object SimpleResultsController extends Controller {
   }
 
   def customCookie = Action {
-    Ok(views.html.index()).withCookies(Cookie("sender", "gistlabs"))
+    Ok(views.html.customCookieTarget()).withCookies(Cookie("sender", "gistlabs"))
   }
 
   def imgResult = Action {

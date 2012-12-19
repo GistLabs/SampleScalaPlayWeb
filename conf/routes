@@ -6,11 +6,14 @@
 GET     /                               controllers.Application.index
 
 GET     /302.example                    controllers.ResponseCodesController.redir
+GET     /302.target                     controllers.ResponseCodesController.redirTarget
+
 GET     /466.example        		    controllers.ResponseCodesController.strangeResponseCode
 GET     /302infinite.example            controllers.ResponseCodesController.infiniteRedir
 GET     /ise.example        		    controllers.ResponseCodesController.internalServerError
 
 GET     /xml.example                    controllers.SimpleResultsController.xmlResult
+GET     /testechotag.example            controllers.SimpleResultsController.echoTestTagHelp
 POST    /testechotag.example            controllers.SimpleResultsController.echoTestTagFromXml
 GET     /img.example                    controllers.SimpleResultsController.imgResult
 GET     /echocookies.example            controllers.SimpleResultsController.echoCookies
