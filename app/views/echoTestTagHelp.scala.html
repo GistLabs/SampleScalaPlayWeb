@@ -1,0 +1,16 @@
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@wrapper("Help",true) {
+    <p>This action should be called with POST request. Request body should contains <b>&lt;test/&gt;</b> tag with some value. This value
+    will be returned within <b>&lt;echo/&gt;</b> tag of response. Example:</p>
+
+    <p><i>Request</i>: &lt;test&gt; Mechanize framework test &lt;/test&gt;  </p>
+    <p><i>Response</i>: &lt;echo&gt; Mechanize framework test &lt;/echo&gt;  </p>
+}
