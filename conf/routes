@@ -19,6 +19,10 @@ GET     /img.example                    controllers.SimpleResultsController.imgR
 GET     /echocookies.example            controllers.SimpleResultsController.echoCookies
 GET     /customcookie.example           controllers.SimpleResultsController.customCookie
 
+
+GET     /advancedform.example       	controllers.FormsController.advancedForm
+POST    /userformsubmit.example       	controllers.FormsController.userFormSubmit
+
 GET     /simpleforms.example       	    controllers.FormsController.simpleForms
 GET     /getsubmit.example       	    controllers.FormsController.simpleFormsGetSubmit
 POST    /postsubmit.example       	    controllers.FormsController.simpleFormsPostSubmit

@@ -25,7 +25,7 @@ object ResponseCodesController extends Controller {
     Redirect(routes.ResponseCodesController.redirTarget())
   }
 
-  def redirTarget = Action{
+  def redirTarget = Action {
     Ok(views.html.redirectTarget())
   }
 
@@ -52,21 +52,25 @@ object SimpleResultsController extends Controller {
     Ok(views.html.echoTestTagHelp())
   }
 
-  def echoTestTagFromXml = Action { request =>
-      request.body.asXml.map { xml =>
-        (xml \\ "test" headOption).map(_.text).map { test =>
-          Ok(views.xml.testTag(test))
-        }.getOrElse {
-          BadRequest("Missing parameter [test]")
-        }
+  def echoTestTagFromXml = Action {
+    request =>
+      request.body.asXml.map {
+        xml =>
+          (xml \\ "test" headOption).map(_.text).map {
+            test =>
+              Ok(views.xml.testTag(test))
+          }.getOrElse {
+            BadRequest("Missing parameter [test]")
+          }
       }.getOrElse {
         BadRequest("Expecting Xml data")
       }
   }
 
-  def echoCookies = Action {implicit request =>
-    val cookies = request.headers.get(COOKIE).getOrElse("")
-    Ok(views.html.echocookies(cookies)).withHeaders(SET_COOKIE -> cookies)
+  def echoCookies = Action {
+    implicit request =>
+      val cookies = request.headers.get(COOKIE).getOrElse("")
+      Ok(views.html.echocookies(cookies)).withHeaders(SET_COOKIE -> cookies)
   }
 
   def customCookie = Action {

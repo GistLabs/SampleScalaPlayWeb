@@ -1,0 +1,78 @@
+@(userForm: Form[User])
+
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@import helper._
+@import org.joda.time.DateTime
+
+@wrapper("Advanced Forms Example",true) {
+    <p><strong>Fill User Form</strong></p>
+
+    @helper.form(action = routes.FormsController.userFormSubmit) {
+
+    <fieldset>
+        @inputText(
+        userForm("login"),
+            '_label -> "Login",
+            '_help -> "Please choose a valid login."
+            ,'_error -> userForm.globalError
+        )
+
+        @inputText(
+            userForm("email"), '_label -> "Email",
+            '_help -> "Enter a valid email address."
+        )
+
+        @inputPassword(
+            userForm("password.pass1"),
+            '_label -> "Password",
+            '_help -> "A password must be at least 6 characters. "
+        )
+
+        @inputPassword(
+            userForm("password.pass2"),
+            '_label -> "Repeat password",
+            '_help -> "Please repeat your password again.",
+            '_error -> userForm.error("password")
+        )
+
+        <input type="hidden" name="hiddenDate" value='@(new DateTime().toString("MM-dd-yyyy"))' />
+    </fieldset>
+
+    <fieldset>
+        @select(
+            userForm("reference"),
+            options = options(models.Reference.list),
+            '_default -> "How Did You Hear About Us ?",
+            '_label -> "How Did You Hear About Us ?",
+            '_error -> userForm("role").error.map(_.withMessage("Please select"))
+        )
+
+        @inputRadioGroup(
+            userForm("newsletter"),
+            options = options(models.NewsletterFrequency.list),
+            '_label -> "Newsletter Frequency",
+            '_error -> userForm("newsletter").error.map(_.withMessage("select newsletter frequency"))
+        )
+
+        @checkbox(
+            userForm("tos"),
+            '_label -> None,
+            '_text -> "You agree with non-existing Terms and Conditions",
+            '_showConstraints -> false
+        )
+    </fieldset>
+
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Sign Up">
+        </div>
+
+    }
+}
