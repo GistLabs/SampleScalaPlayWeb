@@ -8,14 +8,16 @@
 
 package controllers
 
-import play.api.mvc.{MultipartFormData, Action, Controller}
+import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
-import models.{Client, User}
 import play.api.Play
 import java.io.File
 import play.api.libs.Files
 import java.util.Date
+import scala.Some
+import models.User
+import models.Client
 
 
 object FormsController extends Controller {
@@ -61,7 +63,8 @@ object FormsController extends Controller {
     Ok(views.html.advancedForm(userForm))
   }
 
-  def userFormSubmit = Action { implicit request =>
+  def userFormSubmit = Action {
+    implicit request =>
       val form = userForm.bindFromRequest()
       play.Logger.info(form.errors.mkString("  "))
       form.fold(
@@ -70,12 +73,14 @@ object FormsController extends Controller {
       )
   }
 
-  def simpleFormsGetSubmit = Action { implicit request =>
+  def simpleFormsGetSubmit = Action {
+    implicit request =>
       def param(field: String): Option[String] = request.queryString.get(field).flatMap(_.headOption)
       Ok(views.html.showSimpleFormsResult(Map("name" -> param("name").getOrElse(""))))
   }
 
-  def simpleFormsPostSubmit = Action { implicit request =>
+  def simpleFormsPostSubmit = Action {
+    implicit request =>
       val form = simpleForm.bindFromRequest()
       form.fold(
         errors => BadRequest(views.html.simpleforms(form.copy(errors = form.errors))),
@@ -93,7 +98,8 @@ object FilesController extends Controller {
     Ok(views.html.showUpload(multi))
   }
 
-  def upload = Action {request =>
+  def upload = Action {
+    request =>
       def writeFile(file: MultipartFormData.FilePart[Files.TemporaryFile]): String = {
         val filename = file.filename
         val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
@@ -117,3 +123,5 @@ object FilesController extends Controller {
     Ok.sendFile(new java.io.File(fullFilename))
   }
 }
+
+

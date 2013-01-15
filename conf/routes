@@ -33,5 +33,9 @@ GET     /singleupload.example           controllers.FilesController.showMultiUpl
 POST    /upload				      	    controllers.FilesController.upload
 GET     /download/:filename 		    controllers.FilesController.download(filename)
 
+GET     /login                          controllers.Auth.login
+POST    /auth                           controllers.Auth.authenticate
+GET     /auth/page                      controllers.SecuredActions.securedArea
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)

@@ -9,7 +9,6 @@
 package controllers
 
 import play.api.mvc._
-import java.lang.RuntimeException
 import play.api.mvc.Cookie
 
 
@@ -18,7 +17,6 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 }
-
 
 object ResponseCodesController extends Controller {
   def redir = Action {
