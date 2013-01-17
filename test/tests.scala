@@ -8,6 +8,8 @@
 
 import controllers.SecuredActions
 import org.specs2.mutable._
+import play.api.http.HeaderNames
+import play.api.libs.json.{JsString, Json}
 import play.api.mvc.Cookie
 import play.api.test._
 import play.api.test.Helpers._
@@ -83,6 +85,47 @@ class ControllersSpec extends Specification {
       val result = route(securedAreaRequest.withSession("login" -> "gistlabs")).get
       status(result) must equalTo(OK)
       contentAsString(result) must contain(SecuredActions.token)
+    }
+  }
+
+  "JSON put with wrong headers" in {
+    running(FakeApplication()) {
+      val result = route(FakeRequest(PUT, controllers.routes.JsonController.putValue().url).
+        withHeaders(CONTENT_TYPE -> "text/html"), "{\"status\":\"new\"}").get
+
+      status(result) mustNotEqual (OK)
+    }
+  }
+
+  val jsonTestValue = "new Value"
+  val json = Json.obj(
+    "value" -> JsString(jsonTestValue)
+  )
+
+  val putReq = FakeRequest(PUT, controllers.routes.JsonController.putValue().url).
+    withHeaders(CONTENT_TYPE -> "application/json")
+
+  "JSON put with right headers" in {
+    running(FakeApplication()) {
+      val result = route(putReq, json).get
+
+      status(result) mustEqual (OK)
+      contentAsString(result) must contain("status")
+      contentAsString(result) must contain("OK")
+    }
+  }
+
+  "JSON put then get" in {
+    running(FakeApplication()) {
+      route(putReq, json)
+
+      val getReq = FakeRequest(GET, controllers.routes.JsonController.putValue().url).
+        withHeaders(CONTENT_TYPE -> "application/json")
+
+      val result = route(getReq).get
+
+      contentAsString(result) must contain(jsonTestValue)
+      status(result) mustEqual (OK)
     }
   }
 }

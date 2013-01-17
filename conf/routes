@@ -37,5 +37,9 @@ GET     /login                          controllers.Auth.login
 POST    /auth                           controllers.Auth.authenticate
 GET     /auth/page                      controllers.SecuredActions.securedArea
 
+GET     /json                           controllers.JsonController.index
+GET     /json/value                     controllers.JsonController.getValue
+PUT     /json/value                     controllers.JsonController.putValue
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)

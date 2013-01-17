@@ -12,12 +12,15 @@ import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.Play
-import java.io.File
 import play.api.libs.Files
+import play.api.libs.json._
+
+import java.io.File
 import java.util.Date
 import scala.Some
 import models.User
 import models.Client
+import play.api.cache.Cache
 
 
 object FormsController extends Controller {
@@ -125,3 +128,34 @@ object FilesController extends Controller {
 }
 
 
+object JsonController extends Controller {
+  import play.api.Play.current
+
+  def index = Action {
+    Ok(views.html.jsonHelp())
+  }
+
+  def getValue = Action {
+    val value = Cache.getAs[String]("value").getOrElse("")
+    Ok(Json.toJson(
+      Map("value" -> value)
+    ))
+  }
+
+  def putValue = Action(parse.json) {
+    request =>
+      (request.body \ "value").asOpt[String].map {
+        value =>
+          Cache.set("value", value)
+
+          Ok(Json.toJson(
+            Map("status" -> "OK")
+          ))
+
+      }.getOrElse {
+        BadRequest(Json.toJson(
+          Map("status" -> "error", "details" -> "value parameter missed")
+        ))
+      }
+  }
+}
