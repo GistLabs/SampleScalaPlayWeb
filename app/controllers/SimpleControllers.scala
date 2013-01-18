@@ -10,6 +10,7 @@ package controllers
 
 import play.api.mvc._
 import play.api.mvc.Cookie
+import play.api.cache.Cached
 
 
 object Application extends Controller {
@@ -42,6 +43,9 @@ object ResponseCodesController extends Controller {
 
 
 object SimpleResultsController extends Controller {
+
+  import play.api.Play.current
+
   def xmlResult = Action {
     Ok(<message>Hello form GistLabs!</message>)
   }
@@ -77,5 +81,12 @@ object SimpleResultsController extends Controller {
 
   def imgResult = Action {
     Ok(views.html.imgexample())
+  }
+
+  def cachedResult = Action {request =>
+    request.headers.get(IF_NONE_MATCH) match {
+      case Some(x) => NotModified
+      case None => Ok(views.html.cachedPage()).withHeaders((CACHE_CONTROL, "max-age=3600"),(ETAG, "xxx"))
+    }
   }
 }

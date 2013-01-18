@@ -1,0 +1,18 @@
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@wrapper("Caching example!",true) {
+    <h1>ETag / Cache-control / Not-Modified example</h1>
+    <ul>
+        <li>On request without If-None-Match Etag/Cache-Control headers are sent in response</li>
+        <li>On request with If-None-Match header Not-Modified result sent</li>
+    </ul>
+
+}
+

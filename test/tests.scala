@@ -64,6 +64,21 @@ class ControllersSpec extends Specification {
     }
   }
 
+  "Get ETag / Cache-Control" in {
+    running(FakeApplication()){
+      val result = controllers.SimpleResultsController.cachedResult()(FakeRequest())
+      headers(result).get(ETAG) mustNotEqual(None)
+      headers(result).get(CACHE_CONTROL) mustNotEqual(None)
+    }
+  }
+
+  "Send If-None-Match and get Not-Modified" in {
+    running(FakeApplication()){
+      val result = controllers.SimpleResultsController.cachedResult()(FakeRequest().withHeaders((IF_NONE_MATCH,"xx")))
+      status(result) mustEqual NOT_MODIFIED
+    }
+  }
+
   val securedAreaRequest = FakeRequest(GET, controllers.routes.SecuredActions.securedArea().url)
 
   "Try to access secured area without credentials" in {

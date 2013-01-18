@@ -18,7 +18,7 @@ POST    /testechotag.example            controllers.SimpleResultsController.echo
 GET     /img.example                    controllers.SimpleResultsController.imgResult
 GET     /echocookies.example            controllers.SimpleResultsController.echoCookies
 GET     /customcookie.example           controllers.SimpleResultsController.customCookie
-
+GET     /cached.example                 controllers.SimpleResultsController.cachedResult
 
 GET     /advancedform.example       	controllers.FormsController.advancedForm
 POST    /userformsubmit.example       	controllers.FormsController.userFormSubmit
