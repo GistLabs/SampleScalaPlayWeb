@@ -1,0 +1,37 @@
+@(loginForm: Form[(String,String)])(implicit flash: Flash)
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@import helper._
+
+
+@wrapper("Auth Example",true) {
+    <h1>Sign in</h1>
+
+    @loginForm.globalError.map { error =>
+        <p class="error">
+            <strong>@error.message</strong>
+        </p>
+    }
+
+    @flash.get("success").map { message =>
+        <p class="success">
+            @message
+        </p>
+    }
+
+    @form(action = routes.Auth.authenticate, 'enctype -> "multipart/form-data") {
+        @helper.inputText(loginForm("login"), '_label -> "Login (enter 'gistlabs')")
+        @helper.inputPassword(loginForm("password"), '_label -> "Password (enter any but not empty)")
+
+        <p>
+            <button type="submit" id="loginbutton">Login</button>
+        </p>
+    }
+}
