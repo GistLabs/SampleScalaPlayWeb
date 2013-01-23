@@ -43,30 +43,12 @@ object ResponseCodesController extends Controller {
 
 
 object SimpleResultsController extends Controller {
-
-  import play.api.Play.current
-
   def xmlResult = Action {
     Ok(<message>Hello form GistLabs!</message>)
   }
 
   def echoTestTagHelp = Action {
-    Ok(views.html.echoTestTagHelp())
-  }
-
-  def echoTestTagFromXml = Action {
-    request =>
-      request.body.asXml.map {
-        xml =>
-          (xml \\ "test" headOption).map(_.text).map {
-            test =>
-              Ok(views.xml.testTag(test))
-          }.getOrElse {
-            BadRequest("Missing parameter [test]")
-          }
-      }.getOrElse {
-        BadRequest("Expecting Xml data")
-      }
+    Ok(views.html.xmlHelp())
   }
 
   def echoCookies = Action {

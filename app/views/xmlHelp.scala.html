@@ -1,0 +1,22 @@
+@{/**
+* Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+}
+
+@wrapper("XML example",true) {
+    <h1>Welcome to XML example!</h1>
+
+    <ul>
+        <li>Request <a href="@routes.JsonController.getValue">/xml/value page</a> with PUT request, put "xmlTest" String parameter in a body of a request</li>
+        <li>Then request the page with GET request and get parameter back inside 'echo' tag of a XML response.</li>
+    </ul>
+
+
+    <p><strong>Example:</strong></p>
+    <p><i>Request</i>: &lt;xmlTest&gt; Mechanize framework test &lt;/xmlTest&gt;  </p>
+    <p><i>Response</i>: &lt;echo&gt; Mechanize framework test &lt;/echo&gt;  </p>
+}

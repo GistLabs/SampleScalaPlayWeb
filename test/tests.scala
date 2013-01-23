@@ -6,11 +6,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import controllers.SecuredActions
+import controllers.{SimpleResultsController, SecuredActions}
 import org.specs2.mutable._
 import play.api.http.HeaderNames
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.Cookie
+import play.api.templates.Xml
 import play.api.test._
 import play.api.test.Helpers._
 import xml.XML
@@ -34,18 +35,8 @@ class ControllersSpec extends Specification {
     status(result) must beBetween(500, 599)
   }
 
-  "Test Tag Xml Echo" in {
-    running(FakeApplication()) {
-      val result = route(FakeRequest(POST, controllers.routes.SimpleResultsController.echoTestTagFromXml().url).
-        withHeaders(CONTENT_TYPE -> "text/xml"), "<test>test</test>").get
 
-      val data = XML.loadString(contentAsString(result))
-      (data \\ "echo").text must equalTo("test")
-      status(result) must equalTo(OK)
-    }
-  }
-
-  "Hello form GistLabs!" in {
+  "Get 'Hello form GistLabs!' simple xml message" in {
     val result = controllers.SimpleResultsController.xmlResult()(FakeRequest())
     val data = XML.loadString(contentAsString(result))
     (data \\ "message").text must contain("GistLabs")
@@ -114,7 +105,7 @@ class ControllersSpec extends Specification {
 
   val jsonTestValue = "new Value"
   val json = Json.obj(
-    "value" -> JsString(jsonTestValue)
+    "jsonTest" -> JsString(jsonTestValue)
   )
 
   val putReq = FakeRequest(PUT, controllers.routes.JsonController.putValue().url).
@@ -134,6 +125,8 @@ class ControllersSpec extends Specification {
     running(FakeApplication()) {
       route(putReq, json)
 
+      Thread.sleep(1000)
+
       val getReq = FakeRequest(GET, controllers.routes.JsonController.putValue().url).
         withHeaders(CONTENT_TYPE -> "application/json")
 
@@ -141,6 +134,22 @@ class ControllersSpec extends Specification {
 
       contentAsString(result) must contain(jsonTestValue)
       status(result) mustEqual (OK)
+    }
+  }
+
+  "Xml put then get" in {
+    running(FakeApplication()) {
+      route(FakeRequest(PUT, controllers.routes.XmlController.putValue().url).
+        withHeaders(CONTENT_TYPE -> "text/xml"), Xml("<xmlTest>test</xmlTest>")).get
+
+      Thread.sleep(1000)
+
+      val result = route(FakeRequest(GET, controllers.routes.XmlController.getValue().url).
+        withHeaders(CONTENT_TYPE -> "text/xml")).get
+
+      val data = XML.loadString(contentAsString(result))
+      (data \\ "echo").text must equalTo("test")
+      status(result) must equalTo(OK)
     }
   }
 }

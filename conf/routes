@@ -12,9 +12,17 @@ GET     /466.example        		    controllers.ResponseCodesController.strangeRes
 GET     /302infinite.example            controllers.ResponseCodesController.infiniteRedir
 GET     /ise.example        		    controllers.ResponseCodesController.internalServerError
 
-GET     /xml.example                    controllers.SimpleResultsController.xmlResult
-GET     /testechotag.example            controllers.SimpleResultsController.echoTestTagHelp
-POST    /testechotag.example            controllers.SimpleResultsController.echoTestTagFromXml
+GET     /simplexml.example              controllers.SimpleResultsController.xmlResult
+
+GET     /xml                            controllers.XmlController.index
+GET     /xml/value                      controllers.XmlController.getValue
+PUT     /xml/value                      controllers.XmlController.putValue
+
+GET     /json                           controllers.JsonController.index
+GET     /json/value                     controllers.JsonController.getValue
+PUT     /json/value                     controllers.JsonController.putValue
+
+
 GET     /img.example                    controllers.SimpleResultsController.imgResult
 GET     /echocookies.example            controllers.SimpleResultsController.echoCookies
 GET     /customcookie.example           controllers.SimpleResultsController.customCookie
@@ -37,9 +45,7 @@ GET     /login                          controllers.Auth.login
 POST    /auth                           controllers.Auth.authenticate
 GET     /auth/page                      controllers.SecuredActions.securedArea
 
-GET     /json                           controllers.JsonController.index
-GET     /json/value                     controllers.JsonController.getValue
-PUT     /json/value                     controllers.JsonController.putValue
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)

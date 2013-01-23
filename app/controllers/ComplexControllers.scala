@@ -136,17 +136,17 @@ object JsonController extends Controller {
   }
 
   def getValue = Action {
-    val value = Cache.getAs[String]("value").getOrElse("")
+    val value = Cache.getAs[String]("jsonTest").getOrElse("")
     Ok(Json.toJson(
-      Map("value" -> value)
+      Map("echo" -> value)
     ))
   }
 
   def putValue = Action(parse.json) {
     request =>
-      (request.body \ "value").asOpt[String].map {
+      (request.body \ "jsonTest").asOpt[String].map {
         value =>
-          Cache.set("value", value)
+          Cache.set("jsonTest", value)
 
           Ok(Json.toJson(
             Map("status" -> "OK")
@@ -154,8 +154,46 @@ object JsonController extends Controller {
 
       }.getOrElse {
         BadRequest(Json.toJson(
-          Map("status" -> "error", "details" -> "value parameter missed")
+          Map("status" -> "error", "details" -> "jsonTest parameter missed")
         ))
       }
   }
+}
+
+
+
+object XmlController extends Controller {
+  import play.api.Play.current
+
+  def index = Action {
+    Ok(views.html.xmlHelp())
+  }
+
+  def getValue = Action {
+    val value = Cache.getAs[String]("xmlTest").getOrElse("")
+    Ok(views.xml.xmlTest(value))
+  }
+
+
+  val xmlTestTag = "xmlTest"
+
+  def putValue = Action {
+    request =>
+      request.body.asXml.map {
+        xml =>
+          (xml \\ xmlTestTag headOption).map(_.text).map {
+            value =>
+              Cache.set("xmlTest", value)
+
+              Ok(<status>Ok</status>)
+          }.getOrElse {
+            BadRequest(<status>error</status><details>Missing parameter [xmlTestTag]</details>)
+          }
+      }.getOrElse {
+        BadRequest(<status>error</status><details>Expecting Xml data</details>)
+      }
+  }
+
+
+
 }
