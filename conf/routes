@@ -22,6 +22,10 @@ GET     /json                           controllers.JsonController.index
 GET     /json/value                     controllers.JsonController.getValue
 PUT     /json/value                     controllers.JsonController.putValue
 
+GET     /files.example                  controllers.FilesController.index
+POST    /files                          controllers.FilesController.filesEndpointPost
+PUT     /files/:filename                controllers.FilesController.filesEndpointPut(filename)
+GET     /files/:filename                controllers.FilesController.filesEndpointGet(filename)
 
 GET     /img.example                    controllers.SimpleResultsController.imgResult
 GET     /echocookies.example            controllers.SimpleResultsController.echoCookies

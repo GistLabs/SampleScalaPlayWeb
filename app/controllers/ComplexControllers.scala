@@ -21,6 +21,7 @@ import scala.Some
 import models.User
 import models.Client
 import play.api.cache.Cache
+import org.apache.commons.lang3.RandomStringUtils
 
 
 object FormsController extends Controller {
@@ -93,6 +94,44 @@ object FormsController extends Controller {
 
 
 object FilesController extends Controller {
+  def tmpFolder = Play.current.configuration.getString("tmp.path").getOrElse("/tmp")
+
+  val filesFolder = "/files"
+
+  def index = Action {
+    Ok(views.html.filesHelp())
+  }
+
+  def filesEndpointPost = Action(parse.temporaryFile) {
+    request =>
+      request.headers.get(CONTENT_TYPE) match {
+        case Some(cType) =>
+          val fileExtension = cType.substring(cType.lastIndexOf("/") + 1, cType.length)
+          val filename = RandomStringUtils.randomAlphanumeric(5) + "." + fileExtension
+          val visibleFilename = filesFolder + "/" + filename
+          val fullFilename = tmpFolder + "/" + filename
+
+          request.body.moveTo(new File(fullFilename), true)
+          Created.withHeaders(LOCATION -> visibleFilename)
+        case None =>
+          BadRequest("No content type given")
+      }
+  }
+
+  def filesEndpointPut(shortFilename: String) = Action(parse.temporaryFile) {
+    request =>
+      val fullFilename = tmpFolder + "/" + shortFilename
+      request.body.moveTo(new File(fullFilename), true)
+      Ok("file created").withHeaders(LOCATION -> (filesFolder + "/" + shortFilename))
+  }
+
+
+  def filesEndpointGet(shortFilename: String) = Action {
+    Ok.sendFile(new java.io.File("/tmp/"+shortFilename))
+  }
+
+
+
   def showSingleUpload = showUpload(false)
 
   def showMultiUpload = showUpload(true)
@@ -101,11 +140,12 @@ object FilesController extends Controller {
     Ok(views.html.showUpload(multi))
   }
 
+
   def upload = Action {
     request =>
       def writeFile(file: MultipartFormData.FilePart[Files.TemporaryFile]): String = {
         val filename = file.filename
-        val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
+        val fullFilename = tmpFolder + "/" + filename
         file.ref.moveTo(new File(fullFilename), true)
         filename
       }
@@ -122,13 +162,14 @@ object FilesController extends Controller {
   }
 
   def download(filename: String) = Action {
-    val fullFilename = Play.current.configuration.getString("tmp.path") + "/" + filename
+    val fullFilename = tmpFolder + "/" + filename
     Ok.sendFile(new java.io.File(fullFilename))
   }
 }
 
 
 object JsonController extends Controller {
+
   import play.api.Play.current
 
   def index = Action {
@@ -161,8 +202,8 @@ object JsonController extends Controller {
 }
 
 
-
 object XmlController extends Controller {
+
   import play.api.Play.current
 
   def index = Action {
@@ -187,13 +228,12 @@ object XmlController extends Controller {
 
               Ok(<status>Ok</status>)
           }.getOrElse {
-            BadRequest(<status>error</status><details>Missing parameter [xmlTestTag]</details>)
+            BadRequest(<status>error</status> <details>Missing parameter [xmlTestTag]</details>)
           }
       }.getOrElse {
-        BadRequest(<status>error</status><details>Expecting Xml data</details>)
+        BadRequest(<status>error</status> <details>Expecting Xml data</details>)
       }
   }
-
 
 
 }

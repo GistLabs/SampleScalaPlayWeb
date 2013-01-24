@@ -8,11 +8,15 @@
 
 import controllers.{SimpleResultsController, SecuredActions}
 import org.specs2.mutable._
-import play.api.http.HeaderNames
+import play.api.http.{Writeable, DefaultWriteables, HeaderNames}
+import play.api.libs.json.JsString
 import play.api.libs.json.{JsString, Json}
 import play.api.mvc.Cookie
+import play.api.mvc.{RawBuffer, AnyContentAsRaw, Cookie}
 import play.api.templates.Xml
 import play.api.test._
+import play.api.test.FakeApplication
+import play.api.test.FakeHeaders
 import play.api.test.Helpers._
 import xml.XML
 
@@ -36,7 +40,7 @@ class ControllersSpec extends Specification {
   }
 
 
-  "Get 'Hello form GistLabs!' simple xml message" in {
+  "Get 'Hello from GistLabs!' simple xml message" in {
     val result = controllers.SimpleResultsController.xmlResult()(FakeRequest())
     val data = XML.loadString(contentAsString(result))
     (data \\ "message").text must contain("GistLabs")
@@ -52,6 +56,54 @@ class ControllersSpec extends Specification {
 
       status(result) must equalTo(OK)
       cookies must contain("test")
+    }
+  }
+
+  lazy val filesPostRoute = route(FakeRequest(POST,
+    controllers.routes.FilesController.filesEndpointPost().url,
+    FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
+    "brokenpdf"))(new Writeable({s:String => s.getBytes}, None))
+
+  "Send binary stream with POST to /files" in {
+    running(FakeApplication()){
+      val result = filesPostRoute.get
+      status(result) mustEqual CREATED
+      header(LOCATION, result).getOrElse("") must contain("files/")
+      header(LOCATION, result).getOrElse("") must contain(".pdf")
+    }
+  }
+
+  "Send binary stream with POST to /files then GET it" in {
+    running(FakeApplication()){
+      val postResult = filesPostRoute.get
+      val result = route(FakeRequest(GET,header(LOCATION, postResult).getOrElse("invalidUrl"))).get
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual "brokenpdf"
+    }
+  }
+
+  lazy val filesPutRoute = route(FakeRequest(PUT,
+    controllers.routes.FilesController.filesEndpointPut("broken.pdf").url,
+    FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
+    "brokenpdf"))(new Writeable({s:String => s.getBytes}, None))
+
+
+  "Send binary stream with PUT to /files" in {
+    running(FakeApplication()){
+      filesPutRoute.get
+      val result = route(FakeRequest(GET, "files/broken.pdf")).get
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual "brokenpdf"
+    }
+  }
+
+  "Send binary stream with PUT to /files then GET it" in {
+    running(FakeApplication()){
+      val result = filesPutRoute.get
+
+      status(result) mustEqual OK
+      header(LOCATION, result).getOrElse("") must contain("files/")
+      header(LOCATION, result).getOrElse("") must contain("broken.pdf")
     }
   }
 

@@ -1,0 +1,27 @@
+@{/**
+ * Copyright (C) 2012 Gist Labs, LLC. (http://gistlabs.com)
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+}
+
+@wrapper("File POST/PUT/GET example",true) {
+    <h1>File POST/PUT/GET example: </h1>
+
+    <p><b>1. POST binary stream data to /files to create new randomly named file. Response has "302 Created" code and file url in "Location" header. Like this:</b></p>
+        <p>POST /files<br/>
+            Content-Type: application/pdf<br/>
+            with binary stream will return<br/>
+            302 Created<br/>
+            Location: /files/fGc82.pdf</p>
+
+    <p><b>2. PUT binary stream data to /files/:filename to create new file with given filename. Response has "200 OK" code and file url in "Location" header. Like this:</b></p>
+        <p>PUT /files/broken.pdf<br/>
+            with binary stream will return<br/>
+            200 OK<br/>
+            Location: /files/broken.pdf</p>
+
+    <p><b>3. Then get file created with GET request to /files/:filename </b></p>
+}

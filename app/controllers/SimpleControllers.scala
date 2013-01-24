@@ -47,10 +47,6 @@ object SimpleResultsController extends Controller {
     Ok(<message>Hello form GistLabs!</message>)
   }
 
-  def echoTestTagHelp = Action {
-    Ok(views.html.xmlHelp())
-  }
-
   def echoCookies = Action {
     implicit request =>
       val cookies = request.headers.get(COOKIE).getOrElse("")
