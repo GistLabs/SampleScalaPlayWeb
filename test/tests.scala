@@ -82,13 +82,14 @@ class ControllersSpec extends Specification {
     }
   }
 
+  lazy val filesPutRoute = route(FakeRequest(PUT,
+    controllers.routes.FilesController.filesEndpointPut("broken.pdf").url,
+    FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
+    "brokenpdf"))(new Writeable({s:String => s.getBytes}, None))
 
   "Send binary stream with PUT to /files then GET it" in {
     running(FakeApplication()){
-      val putResult = route(FakeRequest(PUT,
-        controllers.routes.FilesController.filesEndpointPut("broken.pdf").url,
-        FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
-        "brokenpdf"))(new Writeable({s:String => s.getBytes}, None)).get
+      val putResult = filesPutRoute.get
       status(putResult) mustEqual OK
       header(LOCATION, putResult).getOrElse("") must contain("files/")
       header(LOCATION, putResult).getOrElse("") must contain("broken.pdf")
