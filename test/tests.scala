@@ -100,6 +100,15 @@ class ControllersSpec extends Specification {
     }
   }
 
+  "Send binary stream with existing name to /files with PUT" in {
+    running(FakeApplication()){
+      val result = filesPutRoute.get
+      val result2 = filesPutRoute.get
+
+      status(result2) mustEqual CONFLICT
+    }
+  }
+
   "Get ETag / Cache-Control" in {
     running(FakeApplication()){
       val result = controllers.SimpleResultsController.cachedResult()(FakeRequest())
