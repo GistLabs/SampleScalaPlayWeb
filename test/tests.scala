@@ -82,28 +82,21 @@ class ControllersSpec extends Specification {
     }
   }
 
-  lazy val filesPutRoute = route(FakeRequest(PUT,
-    controllers.routes.FilesController.filesEndpointPut("broken.pdf").url,
-    FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
-    "brokenpdf"))(new Writeable({s:String => s.getBytes}, None))
-
-
-  "Send binary stream with PUT to /files" in {
-    running(FakeApplication()){
-      filesPutRoute.get
-      val result = route(FakeRequest(GET, "files/broken.pdf")).get
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual "brokenpdf"
-    }
-  }
 
   "Send binary stream with PUT to /files then GET it" in {
     running(FakeApplication()){
-      val result = filesPutRoute.get
+      val putResult = route(FakeRequest(PUT,
+        controllers.routes.FilesController.filesEndpointPut("broken.pdf").url,
+        FakeHeaders(Seq(CONTENT_TYPE->Seq("application/pdf"))),
+        "brokenpdf"))(new Writeable({s:String => s.getBytes}, None)).get
+      status(putResult) mustEqual OK
+      header(LOCATION, putResult).getOrElse("") must contain("files/")
+      header(LOCATION, putResult).getOrElse("") must contain("broken.pdf")
+      Thread.sleep(1000)
 
+      val result = route(FakeRequest(GET, controllers.routes.FilesController.filesEndpointPut("broken.pdf").url)).get
       status(result) mustEqual OK
-      header(LOCATION, result).getOrElse("") must contain("files/")
-      header(LOCATION, result).getOrElse("") must contain("broken.pdf")
+      contentAsString(result) mustEqual "brokenpdf"
     }
   }
 
