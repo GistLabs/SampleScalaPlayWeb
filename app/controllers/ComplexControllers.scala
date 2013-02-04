@@ -11,10 +11,9 @@ package controllers
 import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.Play
+import play.api.{Application, Logger, Play}
 import play.api.libs.Files
 import play.api.libs.json._
-
 import java.io.File
 import java.util.Date
 import scala.Some
@@ -33,7 +32,6 @@ object FormsController extends Controller {
   )
 
   val userForm: Form[User] = Form(
-    // Define a mapping that will handle User values
     mapping(
       "login" -> text(minLength = 4),
       "email" -> email,
@@ -92,11 +90,30 @@ object FormsController extends Controller {
   }
 }
 
-
 object FilesController extends Controller {
-  def tmpFolder = Play.current.configuration.getString("tmp.path").getOrElse("/tmp")
+  def deleteFilesFromFolder(folder:File) = {
+    val files = folder.listFiles()
+
+    files.foreach {
+      file =>
+        if (!file.delete()) {
+          Logger.error("Failed to delete " + file)
+        }
+    }
+  }
+
+  def getTmpFolderName(app:Application) = app.configuration.getString("tmp.path").
+                                                                 getOrElse("/tmp/playsampleapp")
+
+  def getTmpFolder(app:Application) = new File(FilesController.getTmpFolderName(app))
+
+  def deleteFilesFromTempFolder(app:Application) = deleteFilesFromFolder(getTmpFolder(app))
+
+  val tmpFolder = getTmpFolderName(Play.current)
 
   val filesFolder = "/files"
+
+  def file(folder:String, filename:String) = new File(folder + "/" + filename)
 
   def index = Action {
     Ok(views.html.filesHelp())
@@ -109,9 +126,8 @@ object FilesController extends Controller {
           val fileExtension = cType.substring(cType.lastIndexOf("/") + 1, cType.length)
           val filename = RandomStringUtils.randomAlphanumeric(5) + "." + fileExtension
           val visibleFilename = filesFolder + "/" + filename
-          val fullFilename = tmpFolder + "/" + filename
 
-          request.body.moveTo(new File(fullFilename), true)
+          request.body.moveTo(file(tmpFolder,filename), true)
           Created.withHeaders(LOCATION -> visibleFilename)
         case None =>
           BadRequest("No content type given")
@@ -120,17 +136,18 @@ object FilesController extends Controller {
 
   def filesEndpointPut(shortFilename: String) = Action(parse.temporaryFile) {
     request =>
-      val fullFilename = tmpFolder + "/" + shortFilename
-      request.body.moveTo(new File(fullFilename), true)
-      Ok("file created").withHeaders(LOCATION -> (filesFolder + "/" + shortFilename))
+      val f = file(tmpFolder,shortFilename)
+      if(f.exists()){
+        Conflict
+      }else{
+        request.body.moveTo(f, false)
+        Ok("file created").withHeaders(LOCATION -> (filesFolder + "/" + shortFilename))
+      }
   }
-
 
   def filesEndpointGet(shortFilename: String) = Action {
-    Ok.sendFile(new java.io.File("/tmp/"+shortFilename))
+    Ok.sendFile(file(tmpFolder,shortFilename))
   }
-
-
 
   def showSingleUpload = showUpload(false)
 
@@ -139,7 +156,6 @@ object FilesController extends Controller {
   def showUpload(multi: Boolean) = Action {
     Ok(views.html.showUpload(multi))
   }
-
 
   def upload = Action {
     request =>
@@ -169,7 +185,6 @@ object FilesController extends Controller {
 
 
 object JsonController extends Controller {
-
   import play.api.Play.current
 
   def index = Action {
@@ -203,7 +218,6 @@ object JsonController extends Controller {
 
 
 object XmlController extends Controller {
-
   import play.api.Play.current
 
   def index = Action {
@@ -214,7 +228,6 @@ object XmlController extends Controller {
     val value = Cache.getAs[String]("xmlTest").getOrElse("")
     Ok(views.xml.xmlTest(value))
   }
-
 
   val xmlTestTag = "xmlTest"
 
@@ -234,6 +247,4 @@ object XmlController extends Controller {
         BadRequest(<status>error</status> <details>Expecting Xml data</details>)
       }
   }
-
-
 }
