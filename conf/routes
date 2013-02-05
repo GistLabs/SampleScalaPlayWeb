@@ -46,6 +46,7 @@ POST    /upload				      	    controllers.FilesController.upload
 GET     /download/:filename 		    controllers.FilesController.download(filename)
 
 GET     /login                          controllers.Auth.login
+GET     /logout                         controllers.Auth.logout
 POST    /auth                           controllers.Auth.authenticate
 GET     /auth/page                      controllers.SecuredActions.securedArea
 

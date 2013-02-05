@@ -11,15 +11,18 @@ package controllers
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import org.apache.commons.lang3.RandomStringUtils
+
 
 protected object AuthConstants {
   val TrueUsername = "gistlabs"
+  val username = Security.username + RandomStringUtils.randomAlphanumeric(5)
 }
 
 trait Secured {
-  private def username(request: RequestHeader) = request.session.get("login")
+  private def username(request: RequestHeader) = request.session.get(AuthConstants.username)
 
-  private def onUnauthorized(request: RequestHeader) = Results.Unauthorized
+  private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Auth.login())
 
   def withAuth(f: => String => Request[AnyContent] => Result) = {
     Security.Authenticated(username, onUnauthorized) {
@@ -27,7 +30,7 @@ trait Secured {
         if (user == AuthConstants.TrueUsername) {
           Action(request => f(user)(request))
         } else {
-          Action(Results.Unauthorized)
+          Action(Results.Forbidden)
         }
     }
   }
@@ -48,11 +51,17 @@ object Auth extends Controller {
       Ok(views.html.login(loginForm))
   }
 
+  def logout = Action {
+    Redirect(routes.Auth.login).withNewSession.flashing(
+      "success" -> "You've been logged out"
+    )
+  }
+
   def authenticate = Action {
     implicit request =>
       loginForm.bindFromRequest.fold(
         formWithErrors => BadRequest(views.html.login(formWithErrors)),
-        user => Redirect(routes.SecuredActions.securedArea()).withSession("login" -> user._1)
+        user => Redirect(routes.SecuredActions.securedArea()).withSession(AuthConstants.username -> user._1)
       )
   }
 }
