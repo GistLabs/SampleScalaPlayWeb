@@ -14,7 +14,7 @@ import play.api.mvc._
 import org.apache.commons.lang3.RandomStringUtils
 
 
-protected object AuthConstants {
+object AuthConstants {
   val TrueUsername = "gistlabs"
   val username = Security.username + RandomStringUtils.randomAlphanumeric(5)
 }

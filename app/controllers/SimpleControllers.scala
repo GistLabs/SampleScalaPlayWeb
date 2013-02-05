@@ -13,7 +13,7 @@ import play.api.mvc.Cookie
 import play.api.cache.Cached
 
 
-object Application extends Controller {
+object IndexController extends Controller {
   def index = Action {
     Ok(views.html.index())
   }

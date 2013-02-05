@@ -7,7 +7,7 @@
  */
 
 import collection.parallel.mutable
-import controllers.{FilesController, SimpleResultsController, SecuredActions}
+import controllers._
 import java.io.File
 import org.specs2.execute
 import org.specs2.mutable._
@@ -36,7 +36,7 @@ class ControllersSpec extends Specification {
 
   "Sample Scala Play Web Application" should {
     "Show index action" in {
-      val result = controllers.Application.index()(FakeRequest())
+      val result = controllers.IndexController.index()(FakeRequest())
       status(result) must equalTo(OK)
       contentType(result) must beSome("text/html")
       charset(result) must beSome("utf-8")
@@ -146,16 +146,16 @@ class ControllersSpec extends Specification {
 
     "Try to access secured area without credentials" in new WithApplication {
       val result = route(securedAreaRequest).get
-      status(result) must equalTo(UNAUTHORIZED)
+      status(result) mustNotEqual(OK)
     }
 
     "Go to secured area with wrong credentials" in new WithApplication {
-      val result = route(securedAreaRequest.withSession("login" -> "istlabs")).get
-      status(result) must equalTo(UNAUTHORIZED)
+      val result = route(securedAreaRequest.withSession(AuthConstants.username -> "istlabs")).get
+      status(result) mustNotEqual(OK)
     }
 
     "Go to secured area with right credentials" in new WithApplication {
-      val result = route(securedAreaRequest.withSession("login" -> "gistlabs")).get
+      val result = route(securedAreaRequest.withSession(AuthConstants.username  -> "gistlabs")).get
       status(result) must equalTo(OK)
       contentAsString(result) must contain(SecuredActions.token)
     }

@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                               controllers.Application.index
+GET     /                               controllers.IndexController.index
 
 GET     /302.example                    controllers.ResponseCodesController.redir
 GET     /302.target                     controllers.ResponseCodesController.redirTarget
