@@ -25,3 +25,6 @@ Tested with Play 2.1.3 / Scala 2.10.2
 * Files: single file upload, multiple files upload, POST/PUT/GET service example(create a file with random filename on POST,
  create a file with specified filename on PUT, then get file with GET request)
 * Auth: login to see secret token, or try to access secret area directly(with redirect to index page)
+
+
+Copyright (C) 2012 [Gist Labs, LLC.](http://gistlabs.com) Developed by [Alexander Chepurnoy](http://chepurnoy.org/)
