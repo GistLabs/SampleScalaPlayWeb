@@ -5,7 +5,7 @@ logLevel := Level.Warn
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("play" % "sbt-plugin" % Option(System.getProperty("play.version")).getOrElse("2.0"))
+addSbtPlugin("play" % "sbt-plugin" % Option(System.getProperty("play.version")).getOrElse("2.1.3"))
 
 // War Plugin
-addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "0.9-RC2")
+addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.0")

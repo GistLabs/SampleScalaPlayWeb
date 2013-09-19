@@ -127,7 +127,7 @@ object FilesController extends Controller {
           val filename = RandomStringUtils.randomAlphanumeric(5) + "." + fileExtension
           val visibleFilename = filesFolder + "/" + filename
 
-          request.body.moveTo(file(tmpFolder,filename), true)
+          request.body.moveTo(file(tmpFolder,filename), replace = true)
           Created.withHeaders(LOCATION -> visibleFilename)
         case None =>
           BadRequest("No content type given")
@@ -140,7 +140,7 @@ object FilesController extends Controller {
       if(f.exists()){
         Conflict
       }else{
-        request.body.moveTo(f, false)
+        request.body.moveTo(f, replace = false)
         Ok("file created").withHeaders(LOCATION -> (filesFolder + "/" + shortFilename))
       }
   }
@@ -149,9 +149,9 @@ object FilesController extends Controller {
     Ok.sendFile(file(tmpFolder,shortFilename))
   }
 
-  def showSingleUpload = showUpload(false)
+  def showSingleUpload = showUpload(multi = false)
 
-  def showMultiUpload = showUpload(true)
+  def showMultiUpload = showUpload(multi = true)
 
   def showUpload(multi: Boolean) = Action {
     Ok(views.html.showUpload(multi))
@@ -162,7 +162,7 @@ object FilesController extends Controller {
       def writeFile(file: MultipartFormData.FilePart[Files.TemporaryFile]): String = {
         val filename = file.filename
         val fullFilename = tmpFolder + "/" + filename
-        file.ref.moveTo(new File(fullFilename), true)
+        file.ref.moveTo(new File(fullFilename), replace = true)
         filename
       }
 

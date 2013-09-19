@@ -29,7 +29,7 @@ object ResponseCodesController extends Controller {
   }
 
   def infiniteRedir = Action {
-    Redirect(routes.ResponseCodesController.infiniteRedir)
+    Redirect(routes.ResponseCodesController.infiniteRedir())
   }
 
   def strangeResponseCode = Action {

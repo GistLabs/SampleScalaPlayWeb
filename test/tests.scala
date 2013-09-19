@@ -25,10 +25,7 @@ import play.api.test.Helpers._
 import play.api.test.WithApplication
 import xml.XML
 import org.specs2.execute.{AsResult, StandardResults}
-import play.api.mvc._
 import play.api.mvc.Results
-import play.api.test._
-import play.api.test.Helpers._
 
 
 class ControllersSpec extends Specification {
@@ -79,7 +76,6 @@ class ControllersSpec extends Specification {
       status(result) mustEqual CREATED
       header(LOCATION, result).getOrElse("") must contain("files/")
       header(LOCATION, result).getOrElse("") must contain(".pdf")
-
     }
 
     "Send binary stream with POST to /files then GET it" in new WithApplication {
@@ -133,8 +129,8 @@ class ControllersSpec extends Specification {
 
     "Get ETag / Cache-Control" in new WithApplication {
       val result = controllers.SimpleResultsController.cachedResult()(FakeRequest())
-      headers(result).get(ETAG) mustNotEqual (None)
-      headers(result).get(CACHE_CONTROL) mustNotEqual (None)
+      headers(result).get(ETAG) mustNotEqual None
+      headers(result).get(CACHE_CONTROL) mustNotEqual None
     }
 
     "Send If-None-Match and get Not-Modified" in {
@@ -146,17 +142,17 @@ class ControllersSpec extends Specification {
 
     "Try to access secured area without credentials" in new WithApplication {
       val result = route(securedAreaRequest).get
-      status(result) mustNotEqual(OK)
+      status(result) mustNotEqual OK
     }
 
     "Go to secured area with wrong credentials" in new WithApplication {
       val result = route(securedAreaRequest.withSession(AuthConstants.username -> "istlabs")).get
-      status(result) mustNotEqual(OK)
+      status(result) mustNotEqual OK
     }
 
     "Go to secured area with right credentials" in new WithApplication {
       val result = route(securedAreaRequest.withSession(AuthConstants.username  -> "gistlabs")).get
-      status(result) must equalTo(OK)
+      status(result) mustEqual OK
       contentAsString(result) must contain(SecuredActions.token)
     }
 
@@ -164,7 +160,7 @@ class ControllersSpec extends Specification {
       val result = route(FakeRequest(PUT, controllers.routes.JsonController.putValue().url).
         withHeaders(CONTENT_TYPE -> "text/html"), "{\"status\":\"new\"}").get
 
-      status(result) mustNotEqual (OK)
+      status(result) mustNotEqual OK
     }
 
     val jsonTestValue = "new Value"
@@ -178,7 +174,7 @@ class ControllersSpec extends Specification {
     "JSON put with right headers" in new WithApplication {
       val result = route(putReq, json).get
 
-      status(result) mustEqual (OK)
+      status(result) mustEqual OK
       contentAsString(result) must contain("status")
       contentAsString(result) must contain("OK")
     }
@@ -194,7 +190,7 @@ class ControllersSpec extends Specification {
       val result = route(getReq).get
 
       contentAsString(result) must contain(jsonTestValue)
-      status(result) mustEqual (OK)
+      status(result) mustEqual OK
     }
 
     "Xml put then get" in new WithApplication {
@@ -208,7 +204,7 @@ class ControllersSpec extends Specification {
 
       val data = XML.loadString(contentAsString(result))
       (data \\ "echo").text must equalTo("test")
-      status(result) must equalTo(OK)
+      status(result) mustEqual OK
     }
   }
 }
